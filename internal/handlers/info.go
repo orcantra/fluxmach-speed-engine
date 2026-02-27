@@ -38,7 +38,7 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// For local testing, return a more "realistic" ISP
-	isp := "Local Provider"
+	isp := "Fluxmach Provider"
 	if ip == "127.0.0.1" || ip == "::1" {
 		isp = "Local Network"
 	}

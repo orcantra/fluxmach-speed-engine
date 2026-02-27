@@ -1,5 +1,7 @@
 package config
 
+import "os"
+
 // Config holds configuration for the speed engine
 type Config struct {
 	Port       string
@@ -9,9 +11,19 @@ type Config struct {
 
 // DefaultConfig returns the default configuration
 func DefaultConfig() *Config {
+	serverName := os.Getenv("SERVER_NAME")
+	if serverName == "" {
+		serverName = "Fluxmach Edge Node 1"
+	}
+
+	location := os.Getenv("LOCATION")
+	if location == "" {
+		location = "New York, US"
+	}
+
 	return &Config{
 		Port:       ":8080",
-		ServerName: "Fluxmach Edge Node 1",
-		Location:   "New York, US",
+		ServerName: serverName,
+		Location:   location,
 	}
 }
