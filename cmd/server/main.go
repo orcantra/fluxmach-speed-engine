@@ -15,6 +15,7 @@ func main() {
 
 	// Register handlers
 	mux.HandleFunc("/health", handlers.HealthHandler)
+	mux.HandleFunc("/info", handlers.InfoHandler)
 	mux.HandleFunc("/ping", handlers.PingHandler)
 	mux.HandleFunc("/download", handlers.DownloadHandler)
 	mux.HandleFunc("/upload", handlers.UploadHandler)
@@ -35,7 +36,7 @@ func main() {
 	}
 
 	log.Printf("Fluxmach Speed Engine starting on %s...", cfg.Port)
-	log.Printf("Routes: /ping, /download, /upload, /health")
+	log.Printf("Routes: /info, /ping, /download, /upload, /health")
 	
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Could not listen on %s: %v\n", cfg.Port, err)
