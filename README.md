@@ -25,6 +25,7 @@ The server listens on port `8080`.
 **Endpoint:** `GET /info`
 
 - Returns JSON containing client IP, ISP information, and server metadata (name/location).
+- Requires `X-Fluxmach-Key` header.
 - Used to display connection context on the dashboard.
 - Example:
   ```json
@@ -41,6 +42,7 @@ The server listens on port `8080`.
 **Endpoint:** `GET /ping`
 
 - Returns 200 OK with empty body.
+- Requires `X-Fluxmach-Key` header.
 - Used to measure RTT and jitter.
 
 ### 3. Download Speed
@@ -48,15 +50,17 @@ The server listens on port `8080`.
 **Endpoint:** `GET /download`
 
 - Optional parameters: `duration` (e.g., `10s`, default: `10s`).
+- Requires `X-Fluxmach-Key` header.
 - Streams random data for the specified duration.
-- Example: `curl http://localhost:8080/download?duration=5s > /dev/null`
+- Example: `curl -H "X-Fluxmach-Key: your-key" http://localhost:8080/download?duration=5s > /dev/null`
 
 ### 4. Upload Speed
 
 **Endpoint:** `POST /upload`
 
 - Accepts any data stream and discards it.
-- Example: `curl -X POST --data-binary @largefile http://localhost:8080/upload`
+- Requires `X-Fluxmach-Key` header.
+- Example: `curl -X POST -H "X-Fluxmach-Key: your-key" --data-binary @largefile http://localhost:8080/upload`
 
 ### 5. Health Check
 

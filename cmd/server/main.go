@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+	// Load configuration
+	cfg := config.DefaultConfig()
+
 	// Create a new ServeMux
 	mux := http.NewServeMux()
 
@@ -21,10 +24,7 @@ func main() {
 	mux.HandleFunc("/upload", handlers.UploadHandler)
 
 	// Wrap mux with middleware
-	handler := middleware.SetupMiddleware(mux)
-
-	// Load configuration
-	cfg := config.DefaultConfig()
+	handler := middleware.SetupMiddleware(mux, cfg.AuthKey)
 
 	// Server setup
 	server := &http.Server{
