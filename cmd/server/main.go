@@ -24,7 +24,7 @@ func main() {
 	mux.HandleFunc("/upload", handlers.UploadHandler)
 
 	// Wrap mux with middleware
-	handler := middleware.SetupMiddleware(mux, cfg.AuthKey)
+	handler := middleware.SetupMiddleware(mux, cfg.AuthKey, cfg.AllowedOrigin)
 
 	// Server setup
 	server := &http.Server{

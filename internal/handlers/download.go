@@ -30,14 +30,17 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Stream data
-	// Use a 1MB buffer to reduce syscall overhead and defeat simple compression/dedup
-	buffer := make([]byte, 1024*1024)
-	
+	// Small buffer so chunks arrive frequently even on slow links - a large
+	// buffer can take many seconds to fill, making the transfer look stalled.
+	buffer := make([]byte, 32*1024)
+
 	// Pre-fill buffer with random data
 	rand.Read(buffer)
 
+	flusher, canFlush := w.(http.Flusher)
+
 	timeout := time.After(duration)
-	
+
 	for {
 		select {
 		case <-timeout:
@@ -50,7 +53,10 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				return
 			}
-			// Go's http server flushes automatically when buffer fills.
+			// Flush every chunk so a proxy in front can't buffer past `duration`.
+			if canFlush {
+				flusher.Flush()
+			}
 		}
 	}
 }

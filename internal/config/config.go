@@ -9,10 +9,11 @@ import (
 
 // Config holds configuration for the speed engine
 type Config struct {
-	Port       string
-	ServerName string
-	Location   string
-	AuthKey    string
+	Port          string
+	ServerName    string
+	Location      string
+	AuthKey       string
+	AllowedOrigin string
 }
 
 // DefaultConfig returns the default configuration
@@ -39,10 +40,23 @@ func DefaultConfig() *Config {
 		log.Println("WARNING: FLUXMACH_AUTH_KEY is not set!")
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8080"
+	}
+
+	// Defaults to "*" for easy self-hosting; set to your frontend's origin
+	// in production to stop other sites hotlinking /download and /upload.
+	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+	if allowedOrigin == "" {
+		allowedOrigin = "*"
+	}
+
 	return &Config{
-		Port:       ":8080",
-		ServerName: serverName,
-		Location:   location,
-		AuthKey:    authKey,
+		Port:          port,
+		ServerName:    serverName,
+		Location:      location,
+		AuthKey:       authKey,
+		AllowedOrigin: allowedOrigin,
 	}
 }

@@ -5,10 +5,10 @@ import (
 )
 
 // SetupMiddleware wraps the handler with necessary middleware
-func SetupMiddleware(next http.Handler, authKey string) http.Handler {
+func SetupMiddleware(next http.Handler, authKey string, allowedOrigin string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// CORS
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, Cache-Control, X-Fluxmach-Key")
 
@@ -21,8 +21,8 @@ func SetupMiddleware(next http.Handler, authKey string) http.Handler {
 			return
 		}
 
-		// Health check is public
-		if r.URL.Path == "/health" {
+		// Free/cheap endpoints stay public - gating them just adds a CORS preflight.
+		if r.URL.Path == "/health" || r.URL.Path == "/ping" {
 			next.ServeHTTP(w, r)
 			return
 		}
